@@ -89,9 +89,47 @@ std::set<std::string> boggle(const std::set<std::string>& dict, const std::set<s
 	return result;
 }
 
-bool boggleHelper(const std::set<std::string>& dict, const std::set<std::string>& prefix, const std::vector<std::vector<char> >& board, 
-								   std::string word, std::set<std::string>& result, unsigned int r, unsigned int c, int dr, int dc)
-{
-//add your solution here!
+bool boggleHelper(
+	const std::set<std::string>& dict,
+	const std::set<std::string>& prefix,
+	const std::vector<std::vector<char> >& board, 
+	std::string word,
+	std::set<std::string>& result,
+	unsigned int r,
+	unsigned int c,
+	int dr,
+	int dc
+) {
+	if (board.size() == 0) return false;
+	if (r >= board.size()) return false;
+	if (c >= board[0].size()) return false;
+
+	word.push_back(board[r][c]);
+
+	if (dict.find(word) != dict.end()) {
+		// search for better word.
+		const unsigned int nextRow = r + dr;
+		const unsigned int nextCol = c + dc;
+		const bool longerWordFound = boggleHelper(dict, prefix, board, word, result, nextRow, nextCol, dr, dc);
+		// if not found, insert this word.
+		if (!longerWordFound) {
+			result.insert(word);
+		}
+
+		// return true either way, because a word was found here or beyond.
+		return true;
+	} else {
+		// stop searching if prefix doesn't exist here.
+		if (prefix.find(word) == prefix.end()) return false;
+		// search for better word.
+		const unsigned int nextRow = r + dr;
+		const unsigned int nextCol = c + dc;
+		const bool longerWordFound = boggleHelper(dict, prefix, board, word, result, nextRow, nextCol, dr, dc);
+		// if found, return true.
+		// if not, return false.
+		return longerWordFound;
+	}
+
+	return false;
 
 }
