@@ -17,7 +17,12 @@ int main(int argc, char* argv[])
 
     // key to hash
     string k(argv[1]);
-    size_t hk = h1(k);
+	for(size_t i = 0; i < 10; i++){
+        std::stringstream ss;
+        ss << "hi" << i;
+        ht.insert({ss.str(), i});
+    }
+    size_t hk = h1("a");
     // Test the hash
     cout << "h(" << k << ")=" << hk << endl;
     return 0;
